@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+    #################
+    # APACHE FLINK #
+    #################
+    jobmanager:
+        image: flink:latest
+        container_name: flink-jobmanager
+        ports:
+            - "8082:8081"  # Flink Web UI
+            - "6123:6123"
+        command: jobmanager
+        environment:
+            - JOB_MANAGER_RPC_ADDRESS=jobmanager
+        networks:
+            - dev-env
+
+    taskmanager:
+        image: flink:latest
+        container_name: flink-worker
+        depends_on:
+            - jobmanager
+        command: taskmanager
+        environment:
+            - JOB_MANAGER_RPC_ADDRESS=jobmanager
+            - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
+        networks:
+            - dev-env
+
+networks:
+    dev-env:
+        name: dev-env

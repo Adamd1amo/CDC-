@@ -1,0 +1,45 @@
+version: "2"
+
+services:
+
+  namenode:
+    image: bde2020/hadoop-namenode:latest
+    container_name: namenode
+    expose:
+      - "9000"
+    ports:
+      - "9870:9870"
+    environment:
+      - CLUSTER_NAME=dev-cluster
+    healthcheck:
+      test: ["CMD", "nc", "-z", "namenode", "9870"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: on-failure
+    env_file:
+      - ./hadoop/hadoop.env
+    networks:
+      - dev-env
+
+  datanode:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode
+    depends_on:
+      - namenode
+    expose:
+      - "9864"
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    volumes:
+      - ./hadoop/datanode:/hadoop/dfs/data
+    env_file:
+      - ./hadoop/hadoop.env
+    networks:
+      - dev-env
+    
+networks:
+  dev-env:
+    name: dev-env
+
+    
