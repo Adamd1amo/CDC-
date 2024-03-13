@@ -71,8 +71,8 @@ class TableProperties(Singleton, metaclass=SingletonMeta):
         except:
             return None
 
-    def get_columns_list(self, table_name):
-        try:
-            return self.get_schema_dict(table_name)['columns']
-        except:
-            return None
+    # def get_columns_list(self, table_name):
+    #     try:
+    #         return self.get_schema_dict(table_name)['columns']
+    #     except:
+    #         return None

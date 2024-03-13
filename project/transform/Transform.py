@@ -35,6 +35,7 @@ def parse_kafka_value_to_df(message_reader: DataFrame) -> DataFrame:
 
 
 def map_df_with_structure_table(table_name: str, source_df: DataFrame) -> DataFrame:
+    
     ## Get the metadata of the table directly from the HDFS
     # table_schema = TableProperties().get_struct_type(table_name)
 
@@ -55,24 +56,24 @@ def map_df_with_structure_table(table_name: str, source_df: DataFrame) -> DataFr
 def cdc_processing(source_df: DataFrame, table_name: str):
     table_primary_key = TableProperties().get_primary_key(table_name)
     try:
-        matching_conditions = get_conditions(table_primary_key)
-        update_conditions = "source.timestamp > destination.timestamp"
-        delete_conditions = "source.transaction = 'delete'"
-        destination_path = PathManager().get_hdfs_table_path(table_name, format_file="delta")
-        window_func = Window.partitionBy(table_primary_key).orderBy(func.col("timestamp").desc())
-        newest_rows_df = source_df.withColumn("rank", func.rank().over(window_func)) \
-            .where("rank == 1") \
-            .drop("rank")
-        # newest_rows_df.persist()
-        destination_df = DeltaTable.forPath(SparkSession.getActiveSession(), destination_path)
-        destination_df.alias("destination") \
-            .merge(
-            newest_rows_df.alias("source"),
-            matching_conditions) \
-            .whenMatchedDelete(condition=delete_conditions) \
-            .whenMatchedUpdateAll(condition=update_conditions) \
-            .whenNotMatchedInsertAll() \
-            .execute()
+            matching_conditions = get_conditions(table_primary_key)
+            update_conditions = "source.timestamp > destination.timestamp"
+            delete_conditions = "source.transaction = 'delete'"
+            destination_path = PathManager().get_hdfs_table_path(table_name, format_file="delta")
+            window_func = Window.partitionBy(table_primary_key).orderBy(func.col("timestamp").desc())
+            newest_rows_df = source_df.withColumn("rank", func.rank().over(window_func)) \
+                .where("rank == 1") \
+                .drop("rank")
+            # newest_rows_df.persist()
+            destination_df = DeltaTable.forPath(SparkSession.getActiveSession(), destination_path)
+            destination_df.alias("destination") \
+                .merge(
+                newest_rows_df.alias("source"),
+                matching_conditions) \
+                .whenMatchedDelete(condition=delete_conditions) \
+                .whenMatchedUpdateAll(condition=update_conditions) \
+                .whenNotMatchedInsertAll() \
+                .execute()
     except Exception as e:
         logging.error(f"##############################")
         logging.error(f"##############################")

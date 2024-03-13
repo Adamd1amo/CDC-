@@ -74,13 +74,18 @@ def transform(message_reader: DataFrame):
         dataframes_dict = get_table_names(mapped_df)
         for table_name in dataframes_dict.keys():
             # check table configuration exists
-            if TableProperties(spark).get_table_configurations(table_name):
-                source_df = map_df_with_structure_table(spark, table_name, source_df=dataframes_dict.get(table_name))
+            source_df = map_df_with_structure_table(table_name, source_df=dataframes_dict.get(table_name))
+            if TableProperties().get_table_configurations(table_name):
                 if DeltaTable.isDeltaTable(spark, PathManager.get_hdfs_table_path(table_name, "delta")):
-                    cdc_processing(spark, source_df, table_name)
+                    cdc_processing(source_df, table_name)
                 else:
-                    write_df_to_hdfs(spark=spark, df=source_df, table_name=table_name)
-  
+                    write_df_to_hdfs(df=source_df, table_name=table_name)
+            else:
+                write_df_to_hdfs(df=source_df, table_name=table_name, mode_write="append")
+
+            # commit Kafka's offset
+            # In case of error, the offset will not be committed successfully
+            ## I will code later        :v
             consumer = KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS, "1", KAFKA_SUBSCRIBE_TOPIC, auto_commit=False)
             consumer.commit_offsets(partition_offset)
         
