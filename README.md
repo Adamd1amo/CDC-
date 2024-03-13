@@ -10,17 +10,31 @@ Welcome to the Real-time Change Data Capture (CDC) project! This repository host
 ### Infrastructure Setup:
 
 - **Hadoop**: A distributed file system for storing large volumes of data.
-- **Spark**: A distributed data processing engine for efficient data manipulation.
+- **Delta lake**: A storage layer provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing on top of existing data lakes
 - **Debezium**: An open-source platform for change data capture from database logs.
 - **Kafka**: A distributed streaming platform for building real-time data pipelines.
 - **PostgreSQL**: A relational database management system for storing transactional data.
 - **Flink**: A stream processing framework for high-throughput, low-latency data processing.
+- **Spark**: A distributed data processing engine for efficient data manipulation.
+
+Is considering:
+- **Memory caching**: Redis or Hazelcast
+
 
 ### Workflow 1: Spark for Change Data on HDFS:
 
-- Utilize Spark for capturing and processing change data from various sources.
+#### Current workflow.
+
+![image](https://github.com/Adamd1amo/CDC-/assets/61895816/3176207b-20e9-4ebb-b70a-e98990fa75b0)
+
+
+- Utilize Spark for capturing and processing change data from Postgres.
+- Mapping data using metadata of table stored on HDFS or infer schema use schema_of_json and from_json functions
 - Store processed data efficiently on the Hadoop Distributed File System (HDFS).
-- Enables seamless handling of large datasets with Spark's distributed computing capabilities.
+
+Next:
+- Exactly-once writing data
+- Handling the failure of committing offsets
 
 ### Workflow 2: Flink for Real-time Numeric Column Computation:
 
