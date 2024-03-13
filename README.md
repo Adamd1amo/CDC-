@@ -8,7 +8,7 @@ Welcome to the Real-time Change Data Capture (CDC) project! This repository host
 ## Key Features:
 
 ### Infrastructure Setup:
-Docker (Current) -> Docker Swarm -> Mini K8s -> K8s
+Docker (currently) -> Docker Swarm -> Mini K8s -> K8s
 - **Hadoop**: A distributed file system for storing large volumes of data.
 - **Delta lake**: A storage layer provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing on top of existing data lakes
 - **Debezium**: An open-source platform for change data capture from database logs.
