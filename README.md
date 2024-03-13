@@ -1,14 +1,14 @@
-# Real-time Change Data Capture (CDC)
+# <strong>Real-time Change Data Capture (CDC)<strong>
 
 Welcome to the Real-time Change Data Capture (CDC) project! This repository hosts the infrastructure setup and workflows for capturing and processing real-time data changes using a robust stack of technologies, including Hadoop, Spark, Debezium, Kafka, PostgreSQL, and Flink.
 
-![image](https://github.com/Adamd1amo/CDC-/assets/61895816/53d86888-c4fc-4b38-93b9-a4f0616a2114)
+![image](https://github.com/Adamd1amo/CDC-/assets/61895816/061b4727-5be1-457b-9d0a-20a90d4e4f56)
 
 
 ## Key Features:
 
 ### Infrastructure Setup:
-
+Docker (Current) -> Docker Swarm -> Mini K8s -> K8s
 - **Hadoop**: A distributed file system for storing large volumes of data.
 - **Delta lake**: A storage layer provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing on top of existing data lakes
 - **Debezium**: An open-source platform for change data capture from database logs.
@@ -23,7 +23,7 @@ Is considering:
 
 ### Workflow 1: Spark for Change Data on HDFS:
 
-#### Current workflow.
+#### Current workflow:
 
 ![image](https://github.com/Adamd1amo/CDC-/assets/61895816/3176207b-20e9-4ebb-b70a-e98990fa75b0)
 
