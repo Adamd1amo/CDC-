@@ -2,6 +2,9 @@
 
 Welcome to the Real-time Change Data Capture (CDC) project! This repository hosts the infrastructure setup and workflows for capturing and processing real-time data changes using a robust stack of technologies, including Hadoop, Spark, Debezium, Kafka, PostgreSQL, and Flink.
 
+![image](https://github.com/Adamd1amo/CDC-/assets/61895816/53d86888-c4fc-4b38-93b9-a4f0616a2114)
+
+
 ## Key Features:
 
 ### Infrastructure Setup:
