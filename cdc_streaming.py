@@ -3,10 +3,18 @@ from pyspark.sql import DataFrame
 from pyspark.sql.streaming import StreamingQuery
 from pyspark.sql import functions as func
 from pyspark.sql.types import *
-import logging
 
-from project.common import get_spark_session
+from delta.tables import DeltaTable
+from confluent_kafka import Consumer
+
+from project.common.utils.helper import get_spark_session
 from project.common.utils.PathManager import PathManager
+from project.common.utils.TableProperties import TableProperties
+from project.common.sink.Sink import *
+from project.transform.Transform import *
+from project.common.utils.Kafka import KafkaConsumer
+
+import logging
 
 #Global Variables
 KAFKA_BOOTSTRAP_SERVERS = "kafka:9092"
@@ -55,16 +63,29 @@ def write_kafka_message(message_reader: DataFrame) -> StreamingQuery:
 
 def transform(message_reader: DataFrame):
     try:
-        mapped_df = mapping_string_to_df(message_reader)
-        dataframes_dict = divide_dataframes_by_table_name(mapped_df)
+        partition = message_reader.select("partition").collect()
+        offsets = message_reader.select("offset").collect()
+
+        # combine the partition and offset to the list of dictionary
+        partition_offset = [{partition[i][0]: offsets[i][0]} for i in range(len(partition))]
+
+        message_reader = message_reader.drop("offset")
+        mapped_df = parse_kafka_value_to_df(message_reader)
+        dataframes_dict = get_table_names(mapped_df)
         for table_name in dataframes_dict.keys():
             # check table configuration exists
             if TableProperties(spark).get_table_configurations(table_name):
-                source_df = mapping_raw_to_df(spark, table_name, source_df=dataframes_dict.get(table_name))
+                source_df = map_df_with_structure_table(spark, table_name, source_df=dataframes_dict.get(table_name))
                 if DeltaTable.isDeltaTable(spark, PathManager.get_hdfs_table_path(table_name, "delta")):
                     cdc_processing(spark, source_df, table_name)
                 else:
                     write_df_to_hdfs(spark=spark, df=source_df, table_name=table_name)
+  
+            consumer = KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS, "1", KAFKA_SUBSCRIBE_TOPIC, auto_commit=False)
+            consumer.commit_offsets(partition_offset)
+        
+                    
+        
     except Exception as e:
         logging.error(f"##############################")
         logging.error(f"##############################")
@@ -76,7 +97,7 @@ def transform(message_reader: DataFrame):
 
 def transform_message_from_kafka(message_reader: DataFrame) -> StreamingQuery:
     try:
-        transform_writer = message_reader.selectExpr("CAST(value AS STRING)") \
+        transform_writer = message_reader.selectExpr("CAST(value AS STRING), offset, partition") \
             .writeStream \
             .option("checkpointLocation", PathManager.get_hdfs_default_message_path() + "/transform/checkpoint/") \
             .trigger(processingTime='10 seconds') \

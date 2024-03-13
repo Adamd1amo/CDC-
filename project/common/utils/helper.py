@@ -70,3 +70,6 @@ def convert_dataframe_to_dict(dataframe: DataFrame) -> str:
     # for row in rows_list:
     #     result.append(row.asDict())
     return json.dumps(result)
+
+def get_spark_session(app_name: str) -> SparkSession:
+    return SparkSession.builder.appName(app_name).getOrCreate()

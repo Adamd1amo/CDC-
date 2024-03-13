@@ -8,6 +8,7 @@ from delta import DeltaTable
 
 from project.common.utils.PathManager import PathManager
 from project.common.utils.helper import is_time_segment_key, get_conditions
+from project.common.utils.TableProperties import TableProperties
 
 
 def parse_kafka_value_to_df(message_reader: DataFrame) -> DataFrame:
@@ -34,7 +35,11 @@ def parse_kafka_value_to_df(message_reader: DataFrame) -> DataFrame:
 
 
 def map_df_with_structure_table(table_name: str, source_df: DataFrame) -> DataFrame:
-    table_schema = TableProperties().get_struct_type(table_name)
+    ## Get the metadata of the table directly from the HDFS
+    # table_schema = TableProperties().get_struct_type(table_name)
+
+    ## Infer the schema of table using pyspark functions
+    table_schema = func.schema_of_json(source_df.select("data"))
     segment_key = TableProperties().get_segment_key(table_name)
     source_df = source_df \
         .withColumn("parse_data", func.from_json(col=func.col("data"), schema=table_schema)) \
@@ -76,7 +81,7 @@ def cdc_processing(source_df: DataFrame, table_name: str):
         logging.error(f"##############################")
 
 
-def divide_dataframes_by_table_name(dataframe: DataFrame) -> dict:
+def get_table_names(dataframe: DataFrame) -> dict:
     try:
         rows_list = dataframe.select("table_name").distinct().collect()
         table_names_list = [row.asDict()['table_name'] for row in rows_list]
