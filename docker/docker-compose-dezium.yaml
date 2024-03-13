@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: debezium/postgres:13
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: dev-db
+    volumes:
+      - ../db/:/docker-entrypoint-initdb.d/
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "dev", "-d", "dev-db"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    networks:
+      - dev-env
+
+  zookeeper:
+    container_name: zookeeper
+    image: debezium/zookeeper:latest
+    expose:
+        - 2181
+        - 2888
+        - 3888
+    networks:
+        - dev-env
+
+  connect:
+      container_name: connect
+      image: debezium/connect:latest
+      ports:
+          - "8084:8083"
+      environment:
+          - BOOTSTRAP_SERVERS=kafka:9092
+          - GROUP_ID=1
+          - CONFIG_STORAGE_TOPIC=my_connect_configs
+          - OFFSET_STORAGE_TOPIC=my_connect_offsets
+          - STATUS_STORAGE_TOPIC=my_connect_statuses
+      depends_on:
+          - postgres
+          - zookeeper
+      networks:
+          - dev-env
+
+networks:
+    dev-env:
+        name: dev-env

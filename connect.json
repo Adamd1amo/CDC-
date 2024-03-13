@@ -1,0 +1,25 @@
+{
+    "name": "test-data",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "plugin.name": "decoderbufs",
+        "slot.name": "test",
+        "database.hostname": "postgres",
+        "database.port": "5432",
+        "database.user": "dev",
+        "database.password": "dev",
+        "database.dbname": "dev-db",
+        "transforms": "Reroute",
+        "topic.prefix": "dev_DB",
+        "decimal.handling.mode": "double",
+        "transforms.Reroute.type": "io.debezium.transforms.ByLogicalTableRouter",
+        "transforms.Reroute.topic.regex": "dev_DB.public.(.*)",
+        "transforms.Reroute.topic.replacement": "TimeVarianceAuthority",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "transforms.Reroute.key.field.name": "$1",
+        "key.converter.schemas.enable": "false",
+        "value.converter.schemas.enable": "false",
+        "snapshot.mode": "initial"
+    }
+}
