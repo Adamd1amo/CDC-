@@ -7,12 +7,12 @@ from pyspark.sql.types import *
 from delta.tables import DeltaTable
 from confluent_kafka import Consumer
 
-from project.common.utils.helper import get_spark_session
-from project.common.utils.PathManager import PathManager
-from project.common.utils.TableProperties import TableProperties
-from project.common.sink.Sink import *
-from project.transform.Transform import *
-from project.common.utils.Kafka import KafkaConsumer
+from spark_workflow.common.utils.helper import get_spark_session
+from spark_workflow.common.utils.PathManager import PathManager
+from spark_workflow.common.utils.TableProperties import TableProperties
+from spark_workflow.common.sink.Sink import *
+from spark_workflow.transform.Transform import *
+from spark_workflow.common.utils.Kafka import KafkaConsumer
 
 import logging
 

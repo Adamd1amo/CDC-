@@ -6,9 +6,9 @@ from pyspark.sql import functions as func, DataFrameWriter, DataFrame, SparkSess
 from pyspark.sql.window import Window
 from delta import DeltaTable
 
-from project.common.utils.PathManager import PathManager
-from project.common.utils.helper import is_time_segment_key, get_conditions
-from project.common.utils.TableProperties import TableProperties
+from spark_workflow.common.utils.PathManager import PathManager
+from spark_workflow.common.utils.helper import is_time_segment_key, get_conditions
+from spark_workflow.common.utils.TableProperties import TableProperties
 
 
 def parse_kafka_value_to_df(message_reader: DataFrame) -> DataFrame:

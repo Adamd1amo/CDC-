@@ -1,5 +1,5 @@
-from dev.project.common.entities.SingletonMeta import SingletonMeta
-from project.common.entities.Singleton import Singleton
+from dev.spark_workflow.common.entities.SingletonMeta import SingletonMeta
+from spark_workflow.common.entities.Singleton import Singleton
 
 
 class PathManager(Singleton, metaclass=SingletonMeta):

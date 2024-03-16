@@ -6,9 +6,9 @@ import logging
 from pyspark.sql import DataFrameWriter, SparkSession, DataFrameReader, DataFrame
 from pyspark.sql.streaming import DataStreamReader
 
-from project.common.utils.PathManager import PathManager
-from project.common.utils.DataFrameSQLMapping import DataFrameSQLMapping
-from project.common.CONSTANTS.CONSTANTS import QUERY_EXECUTION_ORDER, QUERY_EXECUTION
+from spark_workflow.common.utils.PathManager import PathManager
+from spark_workflow.common.utils.DataFrameSQLMapping import DataFrameSQLMapping
+from spark_workflow.common.CONSTANTS.CONSTANTS import QUERY_EXECUTION_ORDER, QUERY_EXECUTION
 
 
 def get_conditions(keys: Union[str, List]) -> str:

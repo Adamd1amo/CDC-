@@ -6,8 +6,8 @@ from pyspark.sql.functions import sum, col, stddev, avg, date_format, to_date
 from pyspark.sql.window import Window
 from pyspark.sql import DataFrame
 
-from project.common.utils.Decorators import prefix_process
-from project.common.utils.helper import convert_dataframe_to_dict
+from spark_workflow.common.utils.Decorators import prefix_process
+from spark_workflow.common.utils.helper import convert_dataframe_to_dict
 
 
 @prefix_process

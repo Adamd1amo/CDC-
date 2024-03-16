@@ -1,8 +1,8 @@
 from pyspark.sql import DataFrame, functions as func
 from pyspark.sql import SparkSession
 
-from project.common.CONSTANTS.CONSTANTS import JOIN_TYPES
-from project.common.utils.PathManager import PathManager
+from spark_workflow.common.CONSTANTS.CONSTANTS import JOIN_TYPES
+from spark_workflow.common.utils.PathManager import PathManager
 
 
 class DataFrameSQLMapping(object):

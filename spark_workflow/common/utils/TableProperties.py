@@ -2,10 +2,10 @@ import time
 
 from pyspark.sql.types import *
 
-from project.common.entities.SingletonMeta import SingletonMeta
-from project.common.entities.Singleton import Singleton
-from project.common.utils.ConfigurationParser import ConfigurationParser
-from project.common.utils.helper import get_raw_configs
+from spark_workflow.common.entities.SingletonMeta import SingletonMeta
+from spark_workflow.common.entities.Singleton import Singleton
+from spark_workflow.common.utils.ConfigurationParser import ConfigurationParser
+from spark_workflow.common.utils.helper import get_raw_configs
 
 
 class TableProperties(Singleton, metaclass=SingletonMeta):

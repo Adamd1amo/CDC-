@@ -4,9 +4,9 @@ from typing import Dict
 from pyspark.sql import DataFrame, DataFrameWriter
 from pyspark.sql.streaming import StreamingQuery
 
-from project.common.utils.PathManager import PathManager
-from project.common.utils.TableProperties import TableProperties
-from project.common.utils.helper import is_time_segment_key, assign_options
+from spark_workflow.common.utils.PathManager import PathManager
+from spark_workflow.common.utils.TableProperties import TableProperties
+from spark_workflow.common.utils.helper import is_time_segment_key, assign_options
 
 
 def write_kafka_message(message_reader: DataFrame, store_path: str, checkpoint_path: str) -> StreamingQuery:

@@ -1,9 +1,9 @@
 from functools import wraps
 
 from pyspark.sql import SparkSession
-from project.common.utils.PathManager import PathManager
-from project.common.utils.helper import mapping_sql_query
-from project.common.CONSTANTS.CONSTANTS import QUERY_EXECUTION_ORDER
+from spark_workflow.common.utils.PathManager import PathManager
+from spark_workflow.common.utils.helper import mapping_sql_query
+from spark_workflow.common.CONSTANTS.CONSTANTS import QUERY_EXECUTION_ORDER
 
 
 def prefix_process(func):

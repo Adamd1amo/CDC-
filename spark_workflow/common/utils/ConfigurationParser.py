@@ -1,6 +1,6 @@
-from dev.project.common.entities.SingletonMeta import SingletonMeta
+from dev.spark_workflow.common.entities.SingletonMeta import SingletonMeta
 
-from project.common.entities.Singleton import Singleton
+from spark_workflow.common.entities.Singleton import Singleton
 
 
 class ConfigurationParser(Singleton, metaclass=SingletonMeta):
