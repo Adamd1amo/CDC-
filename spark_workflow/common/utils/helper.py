@@ -8,7 +8,6 @@ from pyspark.sql.streaming import DataStreamReader
 
 from spark_workflow.common.utils.PathManager import PathManager
 from spark_workflow.common.utils.DataFrameSQLMapping import DataFrameSQLMapping
-from spark_workflow.common.CONSTANTS.CONSTANTS import QUERY_EXECUTION_ORDER, QUERY_EXECUTION
 
 
 def get_conditions(keys: Union[str, List]) -> str:
@@ -51,17 +50,6 @@ def delivery_callback(err, msg):
     else:
         log_message = f"Produced event to topic {msg.topic()}: key = {msg.key().decode('utf-8')} value = {msg.value().decode('utf-8')}"
         logging.info(log_message)
-
-
-def mapping_sql_query(data: DataFrame, requirement: Dict) -> DataFrame:
-    dataframe_sql_mapping = DataFrameSQLMapping()
-    for key, value in QUERY_EXECUTION_ORDER.items():
-        if key in requirement.keys():
-            QUERY_EXECUTION_ORDER[key] = requirement[key]
-    query_ordered = {k: v for k, v in QUERY_EXECUTION_ORDER.items() if v is not None}
-    for sql_query, value in query_ordered.items():
-        data = dataframe_sql_mapping.mapping(data, sql_query, value)
-    return data
 
 
 def convert_dataframe_to_dict(dataframe: DataFrame) -> str:
